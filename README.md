@@ -69,7 +69,7 @@ forge install OpenZeppelin/openzeppelin-contracts --no-commit
 
 Clone to your local repo and build.
 ```
-git clone https://github.com/saracen75/ERC
-cd ERC
+git clone https://github.com/saracen75/erc-experiments
+cd erc-experiments
 forge build
 ```
