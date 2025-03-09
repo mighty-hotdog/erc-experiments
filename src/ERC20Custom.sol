@@ -21,9 +21,6 @@ contract ERC20Custom {
      * @notice  Transfer()
      *          emitted when tokens are transferred, including zero value transfers
      * @dev     triggered also when tokens are created aka minting, ie: _from == 0x0
-     *
-     * @dev     ERC20 standard specifies this event to be triggered during mint, which this implementation complies with
-     *          implementation should probably create and trigger separate events for Mint() and Burn()
      */
     event Transfer(address indexed _from, address indexed _to, uint256 _value);
 
@@ -33,12 +30,22 @@ contract ERC20Custom {
      */
     event Approval(address indexed _owner, address indexed _spender, uint256 _value);
 
+    string internal _name;
+    string internal _symbol;
+    uint8 internal _decimals;
+    uint256 internal _totalSupply;
+    mapping(address => uint256) internal _balances;
+    mapping(address => mapping(address => uint256)) internal _allowances;
+    address[] internal _owners;
+
     // functions
     /**
      * @notice  totalSupply()
      *          returns the total token supply
      */
-    function totalSupply() public view returns (uint256) {}
+    function totalSupply() public view returns (uint256) {
+        return _totalSupply;
+    }
 
     /**
      * @notice  balanceOf()
@@ -47,7 +54,9 @@ contract ERC20Custom {
      * @dev     caller == msg.sender, can be anyone
      * @dev     _owner can be a contract or an EOA, standard doesn't specify
      */
-    function balanceOf(address _owner) public view returns (uint256 balance) {}
+    function balanceOf(address _owner) public view returns (uint256 balance) {
+        return _balances[_owner];
+    }
 
     /**
      * @notice  transfer()
@@ -105,7 +114,9 @@ contract ERC20Custom {
      * @dev     caller == msg.sender, can be anyone
      * @dev     _owner and _spender can be contracts or EOAs, standard doesn't specify
      */
-    function allowance(address _owner, address _spender) public view returns (uint256 remaining) {}
+    function allowance(address _owner, address _spender) public view returns (uint256 remaining) {
+        return _allowances[_owner][_spender];
+    }
 
     // ****************************************************************************
     // ERC20 optional extensions
@@ -116,39 +127,46 @@ contract ERC20Custom {
      * @notice  name()
      *          returns the name of the token
      */
-    function name() public view returns (string) {}
+    function name() public view returns (string memory) {
+        return _name;
+    }
 
     /**
      * @notice  symbol()
      *          returns the symbol of the token
      */
-    function symbol() public view returns (string) {}
+    function symbol() public view returns (string memory) {
+        return _symbol;
+    }
 
     /**
      * @notice  decimals()
      *          returns the number of decimals aka precision of the token
      */
-    function decimals() public view returns (uint8) {}
+    function decimals() public view returns (uint8) {
+        return _decimals;
+    }
 
     // ****************************************************************************
     // ERC20 custom extensions specific to this implementation
+    //
     //  these are not part of the ERC20 standard but have been carefully
     //  implemented to ensure that this implementation is fully backward
     //  compatible with the ERC20 standard
     //
-    //  maybe should move these to a separate inheritable contract
+    //  maybe should move these to separate inheritable contracts
     // ****************************************************************************
 
-    // errors
+    // 1. add proper mint and burn mechanism that also trigger associated events
+    // 2. add ownership mechanism that can be used to protect certain functions
+    // 3. add "pluggable" extensions for ERC20 improvements ERC223, ERC677, ERC1363
+    // 4. add "pluggable" extensions for ERC20 addon ERC165
+    // 5. add pausable mechanism
+    // 6. add capping mechanism
 
     // events
 
     // modifiers
-    modifier mintable() {}
-    modifier burnable() {}
-    modifier pausable() {}
-    modifier capped() {}
-    modifier onlyOwner() {}
 
     // functions
 }
