@@ -3,7 +3,7 @@
 **An exploration of the ERC20 and related token standards.**
 
 As part of the learning journey, some realworld tokens with specific uses/functionality will also be explored.
-eg: Link, Eth, Btc, etc
+eg: Link, Eth, BTC, etc
 
 Related token standards:
 
