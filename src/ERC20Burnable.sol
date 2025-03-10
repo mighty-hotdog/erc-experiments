@@ -9,7 +9,6 @@ import {ERC20Core} from "./ERC20Core.sol";
  * @author  @mighty_hotdog 2025-03-10
  */
 abstract contract ERC20Burnable is ERC20Core {
-
     /**
      * @notice  burn()
      *          Burns tokens from caller's balance.

@@ -9,7 +9,6 @@ import {ERC20Core} from "./ERC20Core.sol";
  * @author  @mighty_hotdog 2025-03-10
  */
 abstract contract ERC20Mintable is ERC20Core {
-
     /**
      * @notice  mint()
      *          Mints new tokens to a recipient address.

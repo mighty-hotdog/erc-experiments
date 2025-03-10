@@ -28,28 +28,32 @@ contract ERC20SampleCustomToken is ERC20Core, ERC20Mintable, ERC20Burnable, ERC2
     event SCT_Burned(address indexed fromAccount, uint256 amount);
 
     // constants
-    uint256 public constant STARTING_TOTAL_SUPPLY = 1e9;    // 1 billion tokens
+    uint256 public constant STARTING_TOTAL_SUPPLY = 1e9; // 1 billion tokens
     uint8 public constant DECIMALS = 8;
 
     // functions
-    constructor() ERC20Metadata("SampleCustomToken","SCT") {
+    constructor() ERC20Metadata("SampleCustomToken", "SCT") {
         mint(msg.sender, STARTING_TOTAL_SUPPLY);
     }
+
     function mint(address _to, uint256 _value) public override returns (bool) {
         super.mint(_to, _value);
         emit SCT_Minted(_to, _value);
         return true;
     }
+
     function burn(uint256 _value) public override returns (bool) {
         super.burn(_value);
         emit SCT_Burned(msg.sender, _value);
         return true;
     }
+
     function burn(address _from, uint256 _value) public returns (bool) {
         burnFrom(_from, _value);
         emit SCT_Burned(_from, _value);
         return true;
     }
+
     function decimals() public pure override returns (uint8) {
         return DECIMALS;
     }
