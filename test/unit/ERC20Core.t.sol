@@ -7,7 +7,7 @@ import {ERC20Core} from "../../src/ERC20Core.sol";
 contract ERC20CoreTest is Test {
     function setUp() public {}
 
-    function test_ThisTestDoesNothing() public {
+    function test_ThisTestDoesNothing() public pure {
         console.log("This test does nothing");
     }
 }
