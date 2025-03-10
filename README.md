@@ -78,3 +78,10 @@ git clone https://github.com/saracen75/erc-experiments
 cd erc-experiments
 forge build
 ```
+
+## TODOs
+1. ownership mechanism
+2. extensions for ERC20 improvements ERC223, ERC677, ERC1363
+3. extensions for ERC20 addon ERC165
+4. pausable mechanism
+5. capping mechanism

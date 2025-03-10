@@ -14,13 +14,13 @@ import {ERC4626} from "@openzeppelin/contracts/token/ERC20/extensions/ERC4626.so
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /**
- * @title ERC20Core
- *        An implementation of the ERC20 standard https://eips.ethereum.org/EIPS/eip-20.
- * @dev   This contract is NOT INTENDED to be used directly. In fact this implementation is unusable as there
- *        is no mechanism for minting new tokens. Also there is no reentrancy guard for functions like
- *        transfer(), transferFrom(), and approve() that require it.
- *        This is intended to be used as a base class for other more complete ERC20 implementations
- * @dev   ReentrancyGuard from OpenZeppelin is used to guard against reentrancy
+ * @title   ERC20Core
+ *          An implementation of the ERC20 standard https://eips.ethereum.org/EIPS/eip-20.
+ * @author  @mighty_hotdog 2025-03-10
+ * @dev     This contract is NOT INTENDED to be used directly. In fact this implementation is unusable
+ *          as there is no mechanism for minting new tokens.
+ *          This is intended to be used as a base class for other more complete ERC20 implementations.
+ * @dev     ReentrancyGuard from OpenZeppelin is used to guard against reentrancy.
  */
 abstract contract ERC20Core is ReentrancyGuard {
     // ****************************************************************************
@@ -46,15 +46,7 @@ abstract contract ERC20Core is ReentrancyGuard {
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
 
-    // metadata ///////////////////////////////////////////////////////////////////
-    string private _name;
-    string private _symbol;
-
     // functions //////////////////////////////////////////////////////////////////
-    constructor(string memory name_, string memory symbol_) {
-        _name = name_;
-        _symbol = symbol_;
-    }
 
     /**
      * @notice  totalSupply()
@@ -95,12 +87,12 @@ abstract contract ERC20Core is ReentrancyGuard {
      *          Any override should also call _updateTokens() or its overridden version to effect the needed
      *          state changes.
      */
-    function transfer(address _to, uint256 _value) public virtual nonReentrant returns (bool success) {
+    function transfer(address _to, uint256 _value) public virtual nonReentrant returns (bool) {
         if (_to == address(0)) {
-            revert("ERC20: invalid recipient address(0)");
+            revert("ERC20Core: invalid recipient address(0)");
         }
         _updateTokens(msg.sender, _to, _value);
-        return success;
+        return true;
     }
 
     /**
@@ -131,16 +123,16 @@ abstract contract ERC20Core is ReentrancyGuard {
      *          Any override should also call _spendAllowance() and _updateTokens() or their overridden versions
      *          to effect the needed state changes.
      */
-    function transferFrom(address _from, address _to, uint256 _value) public virtual nonReentrant returns (bool success) {
+    function transferFrom(address _from, address _to, uint256 _value) public virtual nonReentrant returns (bool) {
         if (_from == address(0)) {
-            revert("ERC20: invalid source address(0)");
+            revert("ERC20Core: invalid source address(0)");
         }
         if (_to == address(0)) {
-            revert("ERC20: invalid recipient address(0)");
+            revert("ERC20Core: invalid recipient address(0)");
         }
         _spendAllowance(_from, msg.sender, _value);
         _updateTokens(_from, _to, _value);
-        return success;
+        return true;
     }
 
     /**
@@ -163,9 +155,9 @@ abstract contract ERC20Core is ReentrancyGuard {
      *          Any override should also call _updateAllowance() or its overridden version to effect the needed
      *          state changes.
      */
-    function approve(address _spender, uint256 _value) public virtual nonReentrant returns (bool success) {
+    function approve(address _spender, uint256 _value) public virtual nonReentrant returns (bool) {
         _updateAllowance(msg.sender, _spender, _value);
-        return success;
+        return true;
     }
 
     /**
@@ -196,7 +188,8 @@ abstract contract ERC20Core is ReentrancyGuard {
      *          level functions that implement those logic, and then call this function to effect the updates.
      *
      * @dev     caller == msg.sender, can be anyone, implementations might like additional restrictions/logic here
-     * @dev     reverts if _value > balance[_from]
+     * @dev     reverts if _value > _balances[_from]
+     * @dev     reverts on arithmetic overflow/underflow when calc totalSupply and _balances
      * @dev     Emits Transfer event as specified in ERC20 standard.
      *
      * @dev     Can be overridden to implement additional logic.
@@ -210,14 +203,14 @@ abstract contract ERC20Core is ReentrancyGuard {
         } else if ((_from != address(0)) && (_to == address(0))) {
             // burning
             if (_value > _balances[_from]) {
-                revert("ERC20: burn amount exceeds balance");
+                revert("ERC20Core: burn amount exceeds balance");
             }
             _totalSupply -= _value;
             _balances[_from] -= _value;
         } else if ((_from != address(0)) && (_to != address(0))) {
             // transfer
             if (_value > _balances[_from]) {
-                revert("ERC20: transfer amount exceeds balance");
+                revert("ERC20Core: transfer amount exceeds balance");
             }
             _balances[_from] -= _value;
             _balances[_to] += _value;
@@ -244,10 +237,10 @@ abstract contract ERC20Core is ReentrancyGuard {
      */
     function _updateAllowance(address _owner, address _spender, uint256 _value) internal virtual {
         if (_owner != address(0)) {
-            revert("ERC20: invalid approver address(0)");
+            revert("ERC20Core: invalid approver address(0)");
         }
         if (_spender != address(0)) {
-            revert("ERC20: invalid spender address(0)");
+            revert("ERC20Core: invalid spender address(0)");
         }
         _allowances[_owner][_spender] = _value;
         emit Approval(_owner, _spender, _value);
@@ -271,13 +264,13 @@ abstract contract ERC20Core is ReentrancyGuard {
      */
     function _spendAllowance(address _owner, address _spender, uint256 _value) internal virtual {
         if (_owner == address(0)) {
-            revert("ERC20: invalid owner address(0)");
+            revert("ERC20Core: invalid owner address(0)");
         }
         if (_spender == address(0)) {
-            revert("ERC20: invalid spender address(0)");
+            revert("ERC20Core: invalid spender address(0)");
         }
         if (_value > _allowances[_owner][_spender]) {
-            revert("ERC20: insufficient allowance");
+            revert("ERC20Core: insufficient allowance");
         }
         _allowances[_owner][_spender] -= _value;
     }
