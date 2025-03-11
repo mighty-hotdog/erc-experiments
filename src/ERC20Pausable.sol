@@ -5,6 +5,9 @@ pragma solidity ^0.8.28;
  * @title   ERC20Pausable
  *          Adds a pause mechanism to an ERC20 token https://eips.ethereum.org/EIPS/eip-20.
  * @author  @mighty_hotdog 2025-03-10
+ *
+ * @dev     Despite its name, this contract may be inherited and used by any type of contract
+ *          to provide a pause mechanism.
  */
 abstract contract ERC20Pausable {
     event ERC20Pausable_Paused();
