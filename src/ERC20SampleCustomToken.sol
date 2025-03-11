@@ -20,7 +20,9 @@ import {ERC20Metadata} from "./ERC20Metadata.sol";
 /**
  * @title   ERC20SampleCustomToken
  *          A sample contract for a custom ERC20 token.
- * @author  @mighty_hotdog 2025-03-10
+ * @author  @mighty_hotdog
+ *          created 2025-03-10
+ *          modified 2025-03-11 to use new ERC20Mintable with capping mechanism
  */
 contract ERC20SampleCustomToken is ERC20Core, ERC20Mintable, ERC20Burnable, ERC20Metadata {
     // events
@@ -28,11 +30,12 @@ contract ERC20SampleCustomToken is ERC20Core, ERC20Mintable, ERC20Burnable, ERC2
     event SCT_Burned(address indexed fromAccount, uint256 amount);
 
     // constants
+    uint256 public constant MAX_TOKEN_SUPPLY = type(uint256).max;
     uint256 public constant STARTING_TOTAL_SUPPLY = 1e9; // 1 billion tokens
     uint8 public constant DECIMALS = 8;
 
     // functions
-    constructor() ERC20Metadata("SampleCustomToken", "SCT") {
+    constructor() ERC20Mintable(MAX_TOKEN_SUPPLY) ERC20Metadata("SampleCustomToken", "SCT") {
         mint(msg.sender, STARTING_TOTAL_SUPPLY);
     }
 

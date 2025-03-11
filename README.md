@@ -88,6 +88,6 @@ forge build
 2. ERC677 extension
 3. ERC165 extension
 4. pausable mechanism
-5. capping mechanism
+5. ~~capping mechanism~~ DONE
 6. ERC2612 aka permit extension
 7. wrapper mechanism
