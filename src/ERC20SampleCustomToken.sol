@@ -16,7 +16,7 @@ import {ERC20Core} from "./ERC20Core.sol";
 import {ERC20Mintable} from "./ERC20Mintable.sol";
 import {ERC20Burnable} from "./ERC20Burnable.sol";
 import {ERC20Metadata} from "./ERC20Metadata.sol";
-import {ERC20Pausable} from "./ERC20Pausable.sol";
+import {Pausable} from "./Pausable.sol";
 
 /**
  * @title   ERC20SampleCustomToken
@@ -27,7 +27,7 @@ import {ERC20Pausable} from "./ERC20Pausable.sol";
  *              to add capping functionality with new ERC20Mintable
  *              to add pausing functionality with ERC20Pausable
  */
-contract ERC20SampleCustomToken is ERC20Core, ERC20Mintable, ERC20Burnable, ERC20Metadata, ERC20Pausable {
+contract ERC20SampleCustomToken is ERC20Core, ERC20Mintable, ERC20Burnable, ERC20Metadata, Pausable {
     // events
     event SCT_Minted(address indexed toAccount, uint256 amount);
     event SCT_Burned(address indexed fromAccount, uint256 amount);

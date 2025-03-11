@@ -2,16 +2,19 @@
 pragma solidity ^0.8.28;
 
 /**
- * @title   ERC20Pausable
- *          Adds a pause mechanism to an ERC20 token https://eips.ethereum.org/EIPS/eip-20.
- * @author  @mighty_hotdog 2025-03-10
+ * @title   Pausable
+ *          Adds a pause mechanism to any contract.
+ * @author  @mighty_hotdog
+ *          created 2025-03-10
+ *          modified 2025-03-11 to change contract name and description
  *
- * @dev     Despite its name, this contract may be inherited and used by any type of contract
- *          to provide a pause mechanism.
+ * @dev     The pause state is global, impacting the entire contract that inherits Pausable.
+ * @dev     The pausable modifier allows the selective application of the pause mechanism to
+ *          only certain functions.
  */
-abstract contract ERC20Pausable {
-    event ERC20Pausable_Paused();
-    event ERC20Pausable_Unpaused();
+abstract contract Pausable {
+    event Pausable_Paused();
+    event Pausable_Unpaused();
 
     bool private _paused;
 
@@ -23,7 +26,7 @@ abstract contract ERC20Pausable {
      */
     modifier pausable() {
         if (_paused) {
-            revert("ERC20Pausable: token is paused");
+            revert("Pausable: token is paused");
         }
         _;
     }
@@ -43,7 +46,7 @@ abstract contract ERC20Pausable {
      */
     function pause() external {
         _paused = true;
-        emit ERC20Pausable_Paused();
+        emit Pausable_Paused();
     }
 
     /**
@@ -53,7 +56,7 @@ abstract contract ERC20Pausable {
      */
     function unpause() external {
         _paused = false;
-        emit ERC20Pausable_Unpaused();
+        emit Pausable_Unpaused();
     }
 
     /**
