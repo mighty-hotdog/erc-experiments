@@ -84,7 +84,7 @@ forge build
 ```
 
 ## TODOs
-1. ownership mechanism
+1. ~~ownership mechanism~~ DONE
 2. ERC677 extension
 3. ERC165 extension
 4. ~~pausable mechanism~~ DONE
