@@ -16,6 +16,7 @@ import {ERC20Core} from "./ERC20Core.sol";
 import {ERC20Mintable} from "./ERC20Mintable.sol";
 import {ERC20Burnable} from "./ERC20Burnable.sol";
 import {ERC20Metadata} from "./ERC20Metadata.sol";
+import {ERC20Pausable} from "./ERC20Pausable.sol";
 
 /**
  * @title   ERC20SampleCustomToken
@@ -24,7 +25,7 @@ import {ERC20Metadata} from "./ERC20Metadata.sol";
  *          created 2025-03-10
  *          modified 2025-03-11 to use new ERC20Mintable with capping mechanism
  */
-contract ERC20SampleCustomToken is ERC20Core, ERC20Mintable, ERC20Burnable, ERC20Metadata {
+contract ERC20SampleCustomToken is ERC20Core, ERC20Mintable, ERC20Burnable, ERC20Metadata, ERC20Pausable {
     // events
     event SCT_Minted(address indexed toAccount, uint256 amount);
     event SCT_Burned(address indexed fromAccount, uint256 amount);
@@ -39,19 +40,19 @@ contract ERC20SampleCustomToken is ERC20Core, ERC20Mintable, ERC20Burnable, ERC2
         mint(msg.sender, STARTING_TOTAL_SUPPLY);
     }
 
-    function mint(address _to, uint256 _value) public override returns (bool) {
+    function mint(address _to, uint256 _value) public override pausable returns (bool) {
         super.mint(_to, _value);
         emit SCT_Minted(_to, _value);
         return true;
     }
 
-    function burn(uint256 _value) public override returns (bool) {
+    function burn(uint256 _value) public override pausable returns (bool) {
         super.burn(_value);
         emit SCT_Burned(msg.sender, _value);
         return true;
     }
 
-    function burn(address _from, uint256 _value) public returns (bool) {
+    function burn(address _from, uint256 _value) public pausable returns (bool) {
         burnFrom(_from, _value);
         emit SCT_Burned(_from, _value);
         return true;
