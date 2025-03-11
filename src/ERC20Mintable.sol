@@ -24,7 +24,7 @@ abstract contract ERC20Mintable is ERC20Core {
      */
     constructor(uint256 cap_) {
         if (cap_ == 0) {
-            _tokenSupplyCap = type(uint256).max;
+            revert("ERC20Mintable: cap cannot be 0");
         } else {
             _tokenSupplyCap = cap_;
         }
@@ -35,7 +35,7 @@ abstract contract ERC20Mintable is ERC20Core {
      *          Returns the max token supply cap for the ERC20 token.
      * @dev     Basically a getter function, hence never reverts.
      */
-    function cap() public view returns (uint256) {
+    function cap() public view virtual returns (uint256) {
         return _tokenSupplyCap;
     }
     

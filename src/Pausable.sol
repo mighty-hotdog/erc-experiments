@@ -6,9 +6,11 @@ pragma solidity ^0.8.28;
  *          Adds a pause mechanism to any contract.
  * @author  @mighty_hotdog
  *          created 2025-03-10
- *          modified 2025-03-11 to change contract name and description
+ *          modified 2025-03-11
+ *              to change contract name and description
+ *              shifted modifier and constructor logic to internal functions to allow overriding
  *
- * @dev     The pause state is global, impacting the entire contract that inherits Pausable.
+ * @dev     The pause state is global, visible to the entire contract that inherits Pausable.
  * @dev     The pausable modifier allows the selective application of the pause mechanism to
  *          only certain functions.
  */
@@ -25,9 +27,7 @@ abstract contract Pausable {
      * @dev     reverts if pause is in effect
      */
     modifier pausable() {
-        if (_paused) {
-            revert("Pausable: pause in effect");
-        }
+        _checkIfPaused();
         _;
     }
 
@@ -36,7 +36,7 @@ abstract contract Pausable {
      *          Initializes paused state to false.
      */
     constructor() {
-        _paused = false;
+        _unpause(false);
     }
 
     /**
@@ -44,9 +44,8 @@ abstract contract Pausable {
      *          Sets state to paused.
      * @dev     Emits the ERC20Pausable_Paused event.
      */
-    function pause() external {
-        _paused = true;
-        emit Pausable_Paused();
+    function pause() external virtual {
+        _pause(true);
     }
 
     /**
@@ -54,16 +53,48 @@ abstract contract Pausable {
      *          Sets state to unpaused.
      * @dev     Emits the ERC20Pausable_Unpaused event.
      */
-    function unpause() external {
-        _paused = false;
-        emit Pausable_Unpaused();
+    function unpause() external virtual {
+        _unpause(true);
     }
 
     /**
      * @notice  isPaused()
      *          Returns true if pause is in effect. Otherwise returns false.
+     * @dev     Basically a getter function. Never reverts.
      */
-    function isPaused() external view returns (bool) {
+    function isPaused() external view virtual returns (bool) {
         return _paused;
+    }
+
+    /**
+     * @notice  _checkIfPaused()
+     *          Reverts if pause is in effect.
+     * @dev     Designed to work with the pausable() modifier.
+     *          Since a modifier cannot be virtual, by shifting the pause checking logic here
+     *          to this function, it can be overridden if desired.
+     */
+    function _checkIfPaused() internal view virtual {
+        if (_paused) {
+            revert("Pausable: pause in effect");
+        }
+    }
+
+    /**
+     * @notice  _pause() and _unpause()
+     *          Sets state to paused or unpaused for the whole contract.
+     * @dev     Shifting the state setting logic to these internal functions allows more flexibility
+     *          (eg: with the event emission). And they can be overridden if desired.
+     */
+    function _pause(bool emitEvent) internal virtual {
+        _paused = true;
+        if (emitEvent) {
+            emit Pausable_Paused();
+        }
+    }
+    function _unpause(bool emitEvent) internal virtual {
+        _paused = false;
+        if (emitEvent) {
+            emit Pausable_Unpaused();
+        }
     }
 }

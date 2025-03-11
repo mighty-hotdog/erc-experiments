@@ -1,6 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.28;
 
+/**
+ * @title   Ownable
+ *          Adds a owner mechanism to any contract.
+ * @author  @mighty_hotdog
+ *          created 2025-03-11
+ *
+ * @dev     The owner variable is global, visible to the entire contract that inherits Ownable.
+ *          The onlyOwner() modifier allows the selective application of the owner mechanism to
+ *          only certain functions.
+ */
 abstract contract Ownable {
     error Ownable_InvalidOwner(address owner);
     error Ownable_UnauthorizedAccount(address account);
@@ -25,11 +35,7 @@ abstract contract Ownable {
      * @dev     reverts if initialOwner == address(0)
      */
     constructor(address initialOwner) {
-        if (initialOwner == address(0)) {
-            revert Ownable_InvalidOwner(initialOwner);
-        }
-        _transferOwnership(initialOwner);
-        _owner = initialOwner;
+        _transferOwnership(initialOwner, true);
     }
 
     /**
@@ -39,10 +45,7 @@ abstract contract Ownable {
      * @dev     reverts if newOwner == address(0)
      */
     function transferOwnership(address newOwner) public virtual onlyOwner {
-        if (newOwner == address(0)) {
-            revert Ownable_InvalidOwner(newOwner);
-        }
-        _transferOwnership(newOwner);
+        _transferOwnership(newOwner, true);
     }
 
     /**
@@ -75,9 +78,14 @@ abstract contract Ownable {
      *          allows it to be overridden with different logic if desired.
      * @dev     Also works with transferOwnership() function.
      */
-    function _transferOwnership(address newOwner) internal virtual {
+    function _transferOwnership(address newOwner, bool emitEvent) internal virtual {
+        if (newOwner == address(0)) {
+            revert Ownable_InvalidOwner(newOwner);
+        }
         address oldOwner = _owner;
         _owner = newOwner;
-        emit Ownable_OwnershipTransferred(oldOwner, newOwner);
+        if (emitEvent) {
+            emit Ownable_OwnershipTransferred(oldOwner, newOwner);
+        }
     }
 }
