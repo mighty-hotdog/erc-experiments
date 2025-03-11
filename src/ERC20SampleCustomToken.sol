@@ -23,7 +23,9 @@ import {ERC20Pausable} from "./ERC20Pausable.sol";
  *          A sample contract for a custom ERC20 token.
  * @author  @mighty_hotdog
  *          created 2025-03-10
- *          modified 2025-03-11 to use new ERC20Mintable with capping mechanism
+ *          modified 2025-03-11
+ *              to add capping functionality with new ERC20Mintable
+ *              to add pausing functionality with ERC20Pausable
  */
 contract ERC20SampleCustomToken is ERC20Core, ERC20Mintable, ERC20Burnable, ERC20Metadata, ERC20Pausable {
     // events
