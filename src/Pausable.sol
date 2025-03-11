@@ -26,7 +26,7 @@ abstract contract Pausable {
      */
     modifier pausable() {
         if (_paused) {
-            revert("Pausable: token is paused");
+            revert("Pausable: pause in effect");
         }
         _;
     }

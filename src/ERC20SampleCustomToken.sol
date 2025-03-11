@@ -17,6 +17,7 @@ import {ERC20Mintable} from "./ERC20Mintable.sol";
 import {ERC20Burnable} from "./ERC20Burnable.sol";
 import {ERC20Metadata} from "./ERC20Metadata.sol";
 import {Pausable} from "./Pausable.sol";
+import {Ownable} from "./Ownable.sol";
 
 /**
  * @title   ERC20SampleCustomToken
@@ -27,7 +28,7 @@ import {Pausable} from "./Pausable.sol";
  *              to add capping functionality with new ERC20Mintable
  *              to add pausing functionality with ERC20Pausable
  */
-contract ERC20SampleCustomToken is ERC20Core, ERC20Mintable, ERC20Burnable, ERC20Metadata, Pausable {
+contract ERC20SampleCustomToken is ERC20Core, ERC20Mintable, ERC20Burnable, ERC20Metadata, Pausable, Ownable {
     // events
     event SCT_Minted(address indexed toAccount, uint256 amount);
     event SCT_Burned(address indexed fromAccount, uint256 amount);
@@ -38,11 +39,11 @@ contract ERC20SampleCustomToken is ERC20Core, ERC20Mintable, ERC20Burnable, ERC2
     uint8 public constant DECIMALS = 8;
 
     // functions
-    constructor() ERC20Mintable(MAX_TOKEN_SUPPLY) ERC20Metadata("SampleCustomToken", "SCT") {
+    constructor(address initialOwner) ERC20Mintable(MAX_TOKEN_SUPPLY) ERC20Metadata("SampleCustomToken", "SCT") Ownable(initialOwner) {
         mint(msg.sender, STARTING_TOTAL_SUPPLY);
     }
 
-    function mint(address _to, uint256 _value) public override pausable returns (bool) {
+    function mint(address _to, uint256 _value) public override pausable onlyOwner returns (bool) {
         super.mint(_to, _value);
         emit SCT_Minted(_to, _value);
         return true;
