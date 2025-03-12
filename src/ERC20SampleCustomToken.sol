@@ -13,9 +13,9 @@ import {ERC4626} from "@openzeppelin/contracts/token/ERC20/extensions/ERC4626.so
 
 // these imports are used in the contract
 import {ERC20Core} from "./ERC20Core.sol";
+import {ERC20Metadata} from "./ERC20Metadata.sol";
 import {ERC20Mintable} from "./ERC20Mintable.sol";
 import {ERC20Burnable} from "./ERC20Burnable.sol";
-import {ERC20Metadata} from "./ERC20Metadata.sol";
 import {Pausable} from "./Pausable.sol";
 import {Ownable} from "./Ownable.sol";
 
@@ -27,8 +27,9 @@ import {Ownable} from "./Ownable.sol";
  *          modified 2025-03-11
  *              to add capping functionality with new ERC20Mintable
  *              to add pausing functionality with ERC20Pausable
+ *              to add ownership functionality with ERC20Ownable
  */
-contract ERC20SampleCustomToken is ERC20Core, ERC20Mintable, ERC20Burnable, ERC20Metadata, Pausable, Ownable {
+contract ERC20SampleCustomToken is ERC20Core, ERC20Metadata, ERC20Mintable, ERC20Burnable, Pausable, Ownable {
     // events
     event SCT_Minted(address indexed toAccount, uint256 amount);
     event SCT_Burned(address indexed fromAccount, uint256 amount);

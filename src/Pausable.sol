@@ -83,7 +83,8 @@ abstract contract Pausable {
      * @notice  _pause() and _unpause()
      *          Sets state to paused or unpaused for the whole contract.
      * @dev     Shifting the state setting logic to these internal functions allows more flexibility
-     *          (eg: with the event emission). And they can be overridden if desired.
+     *          (eg: with the event emission). And they can be overridden if desired, especially useful
+     *          when they are used in the constructor which itself cannot be overridden.
      */
     function _pause(bool emitEvent) internal virtual {
         _paused = true;

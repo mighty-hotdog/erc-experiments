@@ -9,34 +9,35 @@ import {ERC20Core} from "./ERC20Core.sol";
  * @author  @mighty_hotdog
  *          created 2025-03-10 with mint() function
  *          modified 2025-03-11 to add capping mechanism
+ *          modified 2025-03-12 to update some variable and function names in the capping mechanism to be more informative
  */
 abstract contract ERC20Mintable is ERC20Core {
-    uint256 private immutable _tokenSupplyCap;
+    uint256 private immutable _maxTokenSupply;
 
     /**
      * @notice  constructor()
-     *          Sets max token supply cap for the ERC20 token.
-     * @param   cap_    max total supply of tokens that can exist
+     *          Sets max # of the ERC20 token.
+     * @param   maxTokenSupply_    max # of tokens that can exist
      *
      * @dev     caller == msg.sender, can be anyone, token protocols may like additional restrictions/logic here
      *
-     * @dev     if cap_ == 0, _tokenSupplyCap is set to type(uint256).max
+     * @dev     Reverts if maxTokenSupply_ == 0.
      */
-    constructor(uint256 cap_) {
-        if (cap_ == 0) {
-            revert("ERC20Mintable: cap cannot be 0");
+    constructor(uint256 maxTokenSupply_) {
+        if (maxTokenSupply_ == 0) {
+            revert("ERC20Mintable: max token supply cannot be 0");
         } else {
-            _tokenSupplyCap = cap_;
+            _maxTokenSupply = maxTokenSupply_;
         }
     }
 
     /**
-     * @notice  cap()
-     *          Returns the max token supply cap for the ERC20 token.
+     * @notice  maxTokenSupply()
+     *          Returns the max # of the ERC20 token that can exist.
      * @dev     Basically a getter function, hence never reverts.
      */
-    function cap() public view virtual returns (uint256) {
-        return _tokenSupplyCap;
+    function maxTokenSupply() public view virtual returns (uint256) {
+        return _maxTokenSupply;
     }
     
     /**
@@ -55,8 +56,8 @@ abstract contract ERC20Mintable is ERC20Core {
         if (_to == address(0)) {
             revert("ERC20Mintable: invalid recipient address(0)");
         }
-        if (totalSupply() + _value > cap()) {
-            revert("ERC20Mintable: max token supply cap exceeded");
+        if (totalSupply() + _value > maxTokenSupply()) {
+            revert("ERC20Mintable: max token supply exceeded");
         }
         _updateTokens(address(0), _to, _value);
         return true;

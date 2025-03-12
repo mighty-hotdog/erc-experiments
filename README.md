@@ -87,11 +87,11 @@ forge build
 1. ~~ownership mechanism~~ DONE
 2. ~~pausable mechanism~~ DONE
 3. ~~capping mechanism~~ DONE
-4. wrapper mechanism
+4. ~~wrapper mechanism~~ DONE
 5. ERC677 extension
 6. ERC165 extension
 7. ERC2612 aka permit extension
-8.  ERC4626 extension
-9.  ERC1155 extension
+8. ERC4626 extension
+9. ERC1155 extension
 10. ERC4337 extension
 11. ERC3156 extension
