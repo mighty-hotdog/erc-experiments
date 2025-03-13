@@ -9,8 +9,11 @@ import {ERC20Core} from "./ERC20Core.sol";
  * @author  @mighty_hotdog 2025-03-13
  */
 abstract contract ERC2612 is ERC20Core {
+    // events /////////////////////////////////////////////////////////////////////
+    // emitted for successful permit() call
     event ERC2612_Permit(address indexed owner, address indexed spender, uint256 indexed value);
 
+    // constants and immutables ///////////////////////////////////////////////////
     /**
      * @notice  PERMIT_TYPEHASH constant
      *          Hashed type-definition of the ERC2612 permit() message the owner signs.
@@ -29,6 +32,7 @@ abstract contract ERC2612 is ERC20Core {
      */
     bytes32 private immutable _domainSeparator;
 
+    // state variables ////////////////////////////////////////////////////////////
     /**
      * @notice  _nonces mapping
      *          Keeps track of the current unused (and hence available) nonce for each owner address.
@@ -36,13 +40,14 @@ abstract contract ERC2612 is ERC20Core {
      */
     mapping(address => uint256) private _nonces;    // nonces for each owner address
 
+    // functions //////////////////////////////////////////////////////////////////
     /**
      * @notice  constructor()
-     *          Calculates and sets the domain separator for this contract.
-     * @dev     The calculation logic is shifted to the _setDomainSeparator() internal function to allow overriding.
+     *          Creates and sets the domain separator for this contract.
+     * @dev     The logic is shifted to the _createDomainSeparator() internal function to allow overriding.
      */
     constructor() {
-        _domainSeparator = _setDomainSeparator();
+        _domainSeparator = _createDomainSeparator();
     }
 
     /**
@@ -132,12 +137,12 @@ abstract contract ERC2612 is ERC20Core {
     }
 
     /**
-     * @notice  _setDomainSeparator()
-     *          Calculates and returns the domain separator for this contract.
+     * @notice  _createDomainSeparator()
+     *          Creates and returns the domain separator for this contract.
      * @dev     This logic is shifted here from the constructor to allow overriding.
      * @dev     Note the hack used to obtain the contract name and version.
      */
-    function _setDomainSeparator() internal view virtual returns (bytes32) {
+    function _createDomainSeparator() internal view virtual returns (bytes32) {
         // as a cheap hack, this implementation uses the abi.encodePacked() address of the contract,
         //  ie: address(this), as both the name and the version of the contract.
         //  override as desired.
