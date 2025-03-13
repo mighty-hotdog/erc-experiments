@@ -18,6 +18,7 @@ import {ERC20Mintable} from "./ERC20Mintable.sol";
 import {ERC20Burnable} from "./ERC20Burnable.sol";
 import {Pausable} from "./Pausable.sol";
 import {Ownable} from "./Ownable.sol";
+import {ERC2612} from "./ERC2612.sol";
 
 /**
  * @title   ERC20SampleCustomToken
@@ -29,7 +30,7 @@ import {Ownable} from "./Ownable.sol";
  *              to add pausing functionality with ERC20Pausable
  *              to add ownership functionality with ERC20Ownable
  */
-contract ERC20SampleCustomToken is ERC20Core, ERC20Metadata, ERC20Mintable, ERC20Burnable, Pausable, Ownable {
+contract ERC20SampleCustomToken is ERC20Core, ERC20Metadata, ERC20Mintable, ERC20Burnable, Pausable, Ownable, ERC2612 {
     // events
     event SCT_Minted(address indexed toAccount, uint256 amount);
     event SCT_Burned(address indexed fromAccount, uint256 amount);

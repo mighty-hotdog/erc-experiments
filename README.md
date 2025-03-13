@@ -90,7 +90,7 @@ forge build
 4. ~~wrapper mechanism~~ DONE
 5. ERC677 extension
 6. ERC165 extension
-7. ERC2612 aka permit extension
+7. ~~ERC2612 aka permit extension~~ DONE
 8. ERC4626 extension
 9. ERC1155 extension
 10. ERC4337 extension

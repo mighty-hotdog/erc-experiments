@@ -77,6 +77,21 @@
    If not exceeded, proceed.
 
 2. Recreates the "digest" aka the original message the owner signed earlier with his private key.
+        digest = keccak256(
+                    abi.encodePacked(
+                        hex"1901",
+                        DOMAIN_SEPARATOR,
+                        keccak256(
+                            abi.encode(
+                                keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)"),
+                                owner,
+                                spender,
+                                value,
+                                nonce,
+                                deadline)
+                        )
+                    )
+                 );
 
    Step 1: The PERMIT_TYPEHASH constant is abi-encoded with the actual values of each message field to produce an abi-compliant version of the original owner's message.
 
@@ -85,20 +100,20 @@
    Step 3: This "struct hash" is then combined with:
    - "\x19\x01"
    - DOMAIN_SEPARATOR
-   and then abi-encodePacked to produce the message aka "digest" that the owner signed earlier with his private key.
+   and then abi-encodePacked and then hashed again with keccak256 to produce the message aka "digest" that the owner signed earlier with his private key.
 
    Note: The \x19\x01 prefix (from EIP-191) ensures the digest is Ethereum-specific and prevents certain signature malleability attacks.
 
-3. Uses the recover() function (from the OpenZep library ECDSA) to extract the owner's address from the v r s values (aka "the signature")
+1. Uses the recover() function (from the OpenZep library ECDSA) to extract the owner's address from the v r s values (aka "the signature")
    and the "digest".
 
    Note: The OpenZep library ECDSA function recover() extracts the public key (aka address of the owner) from the v r s values (aka "the signature") and the "digest".
 
-4. Compares the extracted owner's address to input param to see if it matches.
+2. Compares the extracted owner's address to input param to see if it matches.
    If match, means the signature (ie: v r s) is valid/verified, proceed.
    If not match, revert.
 
-5. Calls approve() to adjust owner's allowance granted to the spender.
+3. Calls approve() to adjust owner's allowance granted to the spender.
 
 ## Importance and Adoption
 Widespread adoption among new tokens and major protocols. Considered a standard feature in modern token design.
