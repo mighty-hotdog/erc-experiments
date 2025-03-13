@@ -1,4 +1,4 @@
-# ERC223 Analysis
+# ERC223
 
 ## Goals
 ERC223 aims to:
@@ -40,7 +40,6 @@ steps
    c. emits Transfer event similiar to ERC20 std but with additional data field
 
 ## Comments
-### Technical
 ERC223, while solving some important ERC20 problems, seems both badly designed and badly written.
 1. ERC223 is not backward compatible with ERC20
    Can't work with existing ERC20 contracts, of which there are many.
